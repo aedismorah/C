@@ -1,0 +1,250 @@
+#pragma once
+#include <iostream>
+
+enum init_type {no_init, zeros_init, eye_init};
+
+template<class T>
+class matrix
+{
+public:
+	matrix(unsigned external_n = 0,unsigned external_m = 0, unsigned init_type = no_init, T **external_A = nullptr)
+	{
+		n = external_n;
+		m = external_m;
+
+		std::cout << "constructor called" << std::endl;
+		if(external_A == nullptr)
+		{
+			A = new T *[n];
+			for(unsigned i = 0; i < n; ++i)
+			{
+				A[i] = new T [m];
+				if(init_type != no_init)
+					for(unsigned j = 0; j < m; ++j)
+					{
+						if(init_type == eye_init)
+							A[i][j] = i == j ? 1 : 0;
+						else
+							A[i][j] = 0;
+					}
+
+			}
+		}
+		else
+			A = external_A;
+	}
+
+	matrix<T> transpose(void)
+	{
+		T **B = new T *[m];
+
+		for(unsigned i = 0; i < m; ++i)
+		{
+			B[i] = new T [n];
+			for(unsigned j = 0; j < n; ++j)
+				B[i][j] = A[j][i];
+		}
+
+		matrix<T> *matrixB = new matrix<T>(m, n, no_init, B);
+		return *matrixB;
+	}
+
+	const matrix<T>& operator=(const matrix<T>& B)
+	{
+		if(A != nullptr)
+		{
+			for(unsigned i = 0; i < n; ++i)
+				delete A[i];
+			delete A;
+		}
+
+		n = B.getN();
+		m = B.getM();
+
+		A = new T *[n];
+		for(unsigned i = 0; i < n; ++i)
+			A[i] = new T [m];
+
+		for(unsigned i = 0; i < n; ++i)
+			for(unsigned j = 0; j < m; ++j)
+				A[i][j] = B.getValue(i, j);
+
+		return *this;
+	}
+
+	void setValue(unsigned i, unsigned j, T value)
+	{
+		if(i < n && j < m)
+			A[i][j] = value;
+		else
+			std::cout << "matrix dimensions exceeded" << std::endl;
+	}
+
+	T getValue(unsigned i,unsigned j) const
+	{
+		if(i < n && j < m)
+			return A[i][j];
+		else
+			std::cout << "matrix dimensions exceeded" << std::endl;
+	}
+
+	unsigned getN(void) const
+	{
+		return n;
+	}
+	unsigned getM(void) const
+	{
+		return m;
+	}
+
+	T elementSum(unsigned diagonal = false)
+	{
+		T sum = 0;
+		if(diagonal)
+		{
+			unsigned smallest_dimension = n > m ? m : n;
+			for(unsigned i = 0; i < smallest_dimension; ++i)
+				sum += A[i][i];
+		}
+		else
+		{
+			for(unsigned i = 0; i < n; ++i)
+				for(unsigned j = 0; j < m; ++j)
+					sum += A[i][j];
+		}
+
+		return sum;
+	}
+
+	void print(void)
+	{
+		for(unsigned i = 0; i < n; ++i)
+		{
+			for(unsigned j = 0; j < m; ++j)
+				std::cout << A[i][j] << "\t";
+			std::cout << std::endl;
+		}
+	}
+
+	~matrix(void)
+	{
+		if(A != nullptr)
+		{
+			for(unsigned i = 0; i < n; ++i)
+				delete A[i];
+			delete A;
+			A = nullptr;
+		}
+		std::cout << "destructor called" << std::endl;
+	}
+	T **A;         //2d dynamic array of type T (matrix)
+private:
+	unsigned n, m; //n - number of rows, m - number of colmuns
+};
+
+template<class T>
+const matrix<T>& operator+(const matrix<T>& A, const matrix<T>& B)
+{
+	if(A.getN() == B.getN() && A.getM() == B.getM())
+	{
+		unsigned n = A.getN(), m = A.getM();
+
+		T** C = new T *[n];
+		for(unsigned i = 0; i < n; ++i)
+		{
+			C[i] = new T [m];
+			for(unsigned j = 0; j < m; ++j)
+				C[i][j] = A.getValue(i, j) + B.getValue(i, j);
+		}
+
+		matrix<T> *matrixC = new matrix<T>(n, m, no_init, C);
+		return *matrixC;
+	}
+	else
+		std::cout << "matrix mutiplication is impossible due to dimention mismatch" << std::endl;
+}
+
+template<class T>
+const matrix<T> operator-(const matrix<T>& A, const matrix<T>& B)
+{
+	if(A.getN() == B.getN() && A.getM() == B.getM())
+	{
+		unsigned n = A.getN(), m = A.getM();
+
+		T** C = new T *[n];
+		for(unsigned i = 0; i < n; ++i)
+		{
+			C[i] = new T [m];
+			for(unsigned j = 0; j < m; ++j)
+				C[i][j] = A.getValue(i, j) - B.getValue(i, j);
+		}
+
+		matrix<T> *matrixC = new matrix<T>(n, m, no_init, C);
+		return *matrixC;
+	}
+	else
+		std::cout << "matrix summation is impossible due to dimention mismatch" << std::endl;
+}
+
+template<class T>
+const matrix<T> operator*(const matrix<T>& A, const matrix<T>& B)
+{
+	if(A.getM() == B.getN())
+	{
+		unsigned n = A.getN(), m = B.getM();
+
+		T** C = new T *[n];
+		for(unsigned i = 0; i < n; ++i)
+		{
+			C[i] = new T [m];
+			for(unsigned j = 0; j < m; ++j)
+				for(unsigned k = 0; k < A.getM(); ++k)
+					C[i][j] += A.getValue(i, k) * B.getValue(k, j);
+		}
+
+		matrix<T> *matrixC = new matrix<T>(n, m, no_init, C);
+		return *matrixC;
+	}
+	else
+		std::cout << "matrix mutiplication is impossible due to dimention mismatch" << std::endl;
+}
+
+template<class T, typename scalarT>
+const matrix<T> operator*(const matrix<T>& A, const scalarT scalar)
+{
+	unsigned n = A.getN(), m = A.getM();
+
+	T** C = new T *[n];
+	for(unsigned i = 0; i < n; ++i)
+	{
+		C[i] = new T [m];
+		for(unsigned j = 0; j < m; ++j)
+			C[i][j] = A.getValue(i, j) * scalar;
+	}
+
+	matrix<T> matrixC(n, m, no_init, C);
+	return matrixC;
+}
+
+template<class T, typename scalarT>
+const matrix<T> operator*(const scalarT scalar, const matrix<T>& A)
+{
+	unsigned n = A.getN(), m = A.getM();
+
+	T** C = new T *[n];
+	for(unsigned i = 0; i < n; ++i)
+	{
+		C[i] = new T [m];
+		for(unsigned j = 0; j < m; ++j)
+			C[i][j] = A.getValue(i, j) * scalar;
+	}
+
+	matrix<T> *matrixC = new matrix<T>(n, m, no_init, C);
+	return *matrixC;
+}
+
+template<class T>
+void print(matrix<T> A)
+{
+	A.print();
+}
