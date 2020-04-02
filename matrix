@@ -53,8 +53,8 @@ public:
 		if(A != nullptr)
 		{
 			for(unsigned i = 0; i < n; ++i)
-				delete A[i];
-			delete A;
+				delete[] A[i];
+			delete[] A;
 		}
 
 		n = B.getN();
@@ -130,8 +130,8 @@ public:
 		if(A != nullptr)
 		{
 			for(unsigned i = 0; i < n; ++i)
-				delete A[i];
-			delete A;
+				delete[] A[i];
+			delete[] A;
 			A = nullptr;
 		}
 		std::cout << "destructor called" << std::endl;
