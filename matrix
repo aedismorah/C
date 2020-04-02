@@ -137,13 +137,13 @@ public:
 		}
 		std::cout << "destructor called" << std::endl;
 	}
-	T **A;         //2d dynamic array of type T (matrix)
 private:
+	T **A;         //2d dynamic array of type T (matrix)
 	unsigned n, m; //n - number of rows, m - number of colmuns
 };
 
 template<class T>
-const matrix<T>& operator+(const matrix<T>& A, const matrix<T>& B)
+const matrix<T> operator+(const matrix<T>& A, const matrix<T>& B)
 {
 	if(A.getN() == B.getN() && A.getM() == B.getM())
 	{
