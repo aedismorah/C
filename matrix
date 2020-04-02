@@ -45,8 +45,7 @@ public:
 				B[i][j] = A[j][i];
 		}
 
-		matrix<T> *matrixB = new matrix<T>(m, n, no_init, B);
-		return *matrixB;
+		return matrix<T>(m, n, no_init, B);
 	}
 
 	const matrix<T>& operator=(const matrix<T>& B)
@@ -157,8 +156,7 @@ const matrix<T> operator+(const matrix<T>& A, const matrix<T>& B)
 				C[i][j] = A.getValue(i, j) + B.getValue(i, j);
 		}
 
-		matrix<T> *matrixC = new matrix<T>(n, m, no_init, C);
-		return *matrixC;
+		return matrix<T>(n, m, no_init, C);
 	}
 	else
 		std::cout << "matrix mutiplication is impossible due to dimention mismatch" << std::endl;
@@ -179,8 +177,7 @@ const matrix<T> operator-(const matrix<T>& A, const matrix<T>& B)
 				C[i][j] = A.getValue(i, j) - B.getValue(i, j);
 		}
 
-		matrix<T> *matrixC = new matrix<T>(n, m, no_init, C);
-		return *matrixC;
+		return matrix<T>(n, m, no_init, C);
 	}
 	else
 		std::cout << "matrix summation is impossible due to dimention mismatch" << std::endl;
@@ -202,8 +199,7 @@ const matrix<T> operator*(const matrix<T>& A, const matrix<T>& B)
 					C[i][j] += A.getValue(i, k) * B.getValue(k, j);
 		}
 
-		matrix<T> *matrixC = new matrix<T>(n, m, no_init, C);
-		return *matrixC;
+		return matrix<T>(n, m, no_init, C);
 	}
 	else
 		std::cout << "matrix mutiplication is impossible due to dimention mismatch" << std::endl;
@@ -222,8 +218,7 @@ const matrix<T> operator*(const matrix<T>& A, const scalarT scalar)
 			C[i][j] = A.getValue(i, j) * scalar;
 	}
 
-	matrix<T> matrixC(n, m, no_init, C);
-	return matrixC;
+	return matrix<T>(n, m, no_init, C);
 }
 
 template<class T, typename scalarT>
@@ -239,8 +234,7 @@ const matrix<T> operator*(const scalarT scalar, const matrix<T>& A)
 			C[i][j] = A.getValue(i, j) * scalar;
 	}
 
-	matrix<T> *matrixC = new matrix<T>(n, m, no_init, C);
-	return *matrixC;
+	return matrix<T>(n, m, no_init, C);
 }
 
 template<class T>
