@@ -22,8 +22,7 @@ public:
 				A[i] = new T [m];
 				if(init_type != no_init)
 					for(unsigned j = 0; j < m; ++j)
-						if(init_type == eye_init)
-							A[i][j] = i == j ? init_type : 0;
+						A[i][j] = i == j ? init_type : 0;
 
 			}
 		}
