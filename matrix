@@ -111,7 +111,7 @@ public:
 		return sum;
 	}
 
-	void print(std::ostream& stream)
+	void print(std::ostream& stream) const
 	{
 		for(unsigned i = 0; i < n; ++i)
 		{
@@ -241,10 +241,12 @@ template<class T>
 std::ostream& operator<<(std::ostream& stream, const matrix<T>& A)
 {
 	A.print(stream);
+	return stream;
 }
 
 template<class T>
-std::ostream& operator>>(std::ostream& stream, const matrix<T>& A)
+std::istream& operator>>(std::istream& stream, matrix<T>& A)
 {
 	A.read(stream);
+	return stream;
 }
