@@ -121,6 +121,13 @@ public:
 		}
 	}
 
+	void read(std::istream& stream)
+	{
+		for(unsigned i = 0; i < n; ++i)
+			for(unsigned j = 0; j < m; ++j)
+				stream >> A[i][j];
+	}
+
 	~matrix(void)
 	{
 		if(A != nullptr)
@@ -234,4 +241,10 @@ template<class T>
 std::ostream& operator<<(std::ostream& stream, const matrix<T>& A)
 {
 	A.print(stream);
+}
+
+template<class T>
+std::ostream& operator>>(std::ostream& stream, const matrix<T>& A)
+{
+	A.read(stream);
 }
