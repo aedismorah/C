@@ -111,13 +111,13 @@ public:
 		return sum;
 	}
 
-	void print(void)
+	void print(std::ostream& stream)
 	{
 		for(unsigned i = 0; i < n; ++i)
 		{
 			for(unsigned j = 0; j < m; ++j)
-				std::cout << A[i][j] << "\t";
-			std::cout << std::endl;
+				stream << A[i][j] << "\t";
+			stream << std::endl;
 		}
 	}
 
@@ -231,7 +231,7 @@ const matrix<T> operator*(const scalarT scalar, const matrix<T>& A)
 }
 
 template<class T>
-void print(const matrix<T>& A)
+std::ostream& operator<<(std::ostream& stream, const matrix<T>& A)
 {
-	A.print();
+	A.print(stream);
 }
